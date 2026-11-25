@@ -107,45 +107,6 @@
   --z-toast: 400;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --void: oklch(0.08 0.02 260);
-    --void-elevated: oklch(0.11 0.02 260);
-    --surface: oklch(0.14 0.015 260);
-    --surface-hover: oklch(0.17 0.015 260);
-    --ink: oklch(0.98 0 0);
-    --ink-muted: oklch(0.65 0.02 260);
-    --ink-subtle: oklch(0.45 0.02 260);
-    --emerald: oklch(0.65 0.22 145);
-    --emerald-glow: oklch(0.75 0.25 145);
-    --emerald-muted: oklch(0.55 0.18 145);
-    --cyan: oklch(0.72 0.18 200);
-    --cyan-glow: oklch(0.82 0.2 200);
-    --amber: oklch(0.78 0.18 85);
-    --amber-glow: oklch(0.75 0.22 85);
-    --rose: oklch(0.62 0.22 15);
-    --rose-glow: oklch(0.65 0.25 15);
-    --seam: oklch(0.22 0.02 260);
-    --seam-strong: oklch(0.28 0.02 260);
-    --glass-1: oklch(0.14 0.015 260 / 0.6);
-    --glass-2: oklch(0.14 0.015 260 / 0.8);
-    --glass-3: oklch(0.14 0.015 260 / 0.95);
-    --glass-border-1: oklch(1 0 0 / 0.06);
-    --glass-border-2: oklch(1 0 0 / 0.1);
-    --glass-border-3: oklch(1 0 0 / 0.15);
-    --glass-shadow-1: 
-      0 0 0 1px oklch(1 0 0 / 0.04) inset,
-      0 1px 0 oklch(1 0 0 / 0.03) inset,
-      0 24px 48px -12px oklch(0 0 0 / 0.4);
-    --glass-shadow-2: 
-      0 0 0 1px oklch(1 0 0 / 0.06) inset,
-      0 2px 0 oklch(1 0 0 / 0.04) inset,
-      0 32px 64px -16px oklch(0 0 0 / 0.5);
-    --glass-blur-1: blur(24px) saturate(180%);
-    --glass-blur-2: blur(40px) saturate(200%);
-  }
-}
-
 * {
   box-sizing: border-box;
   border-width: 0;
