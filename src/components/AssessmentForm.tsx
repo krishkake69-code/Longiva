@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
+import { cn, sanitizeHtml } from "@/lib/utils"
 import { ChevronRight, ChevronLeft, CheckCircle, Loader2, Sparkles, BarChart2 } from "lucide-react"
 import { interventionDatabase } from "@/lib/utils"
 
@@ -197,8 +197,18 @@ export function AssessmentForm({ onComplete, isLoading }: AssessmentFormProps) {
         setCurrentStep(currentStep + 1)
       }
     } else {
-      handleSubmit(onComplete as any)()
+      handleSubmit(onSubmit as any)()
     }
+  }
+
+  const onSubmit = (data: AssessmentData) => {
+    const sanitized: AssessmentData = {
+      ...data,
+      ethnicity: data.ethnicity ? sanitizeHtml(data.ethnicity) : undefined,
+      currentMeds: data.currentMeds ? sanitizeHtml(data.currentMeds) : undefined,
+      currentSupplements: data.currentSupplements ? sanitizeHtml(data.currentSupplements) : undefined,
+    }
+    onComplete(sanitized)
   }
 
   const prevStep = () => {

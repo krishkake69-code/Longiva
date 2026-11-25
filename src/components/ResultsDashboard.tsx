@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label"
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible"
 import { Separator } from "@/components/ui/separator"
 import { Tooltip as TooltipComp, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils"
+import { cn, getCategoryColor } from "@/lib/utils"
 import { 
   Target, TrendingUp, TrendingDown, Zap, Shield, Brain, Heart, Dumbbell, Pill, Moon, Salad, Activity,
   ChevronDown, ChevronUp, CheckCircle, AlertCircle, Info, Calendar, Clock, DollarSign, FlaskConical,
@@ -25,8 +25,13 @@ import {
 } from "lucide-react"
 import { interventionDatabase, Intervention, calculateBiologicalAge, CATEGORY_CONFIG, EVIDENCE_CONFIG, COST_CONFIG, STUDY_TYPE_CONFIG } from "@/lib/utils"
 
+interface UserProfile {
+  chronologicalAge?: number
+  [key: string]: unknown
+}
+
 interface ResultsDashboardProps {
-  userData: any
+  userData: UserProfile
   onInterventionChange: (interventions: Intervention[]) => void
 }
 
@@ -280,7 +285,7 @@ export function ResultsDashboard({ userData, onInterventionChange }: ResultsDash
                         label={({ name, percent }) => `${name} ${percent ? (percent * 100).toFixed(0) : 0}%`}
                       >
                         {Object.entries(categoryStats).map((_, index) => (
-                          <Cell key={index} fill={Object.values(CATEGORY_CONFIG)[index % Object.values(CATEGORY_CONFIG).length].color === "emerald" ? "#00d97e" : Object.values(CATEGORY_CONFIG)[index % Object.values(CATEGORY_CONFIG).length].color === "cyan" ? "#06b6d4" : Object.values(CATEGORY_CONFIG)[index % Object.values(CATEGORY_CONFIG).length].color === "amber" ? "#fbbf24" : Object.values(CATEGORY_CONFIG)[index % Object.values(CATEGORY_CONFIG).length].color === "rose" ? "#f43f5e" : "#00d97e"} />
+                          <Cell key={index} fill={getCategoryColor(Object.keys(categoryStats)[index] as Intervention["category"])} />
                         ))}
                       </Pie>
                       <Tooltip formatter={(v: any) => v !== undefined ? [`${v} interventions`, "Active"] : ["", "Active"]} />
@@ -619,11 +624,11 @@ function SimulationPanel({
   adherenceScenario, setAdherenceScenario, showDetails, setShowDetails,
   projection, lifeExpectancyGain
 }: {
-  interventions: Intervention[], userData: any, biologicalAge: number,
+  interventions: Intervention[], userData: UserProfile, biologicalAge: number,
   timeHorizon: number, setTimeHorizon: (v: number) => void,
   adherenceScenario: "current" | "optimistic" | "pessimistic", setAdherenceScenario: (v: "current" | "optimistic" | "pessimistic") => void,
   showDetails: boolean, setShowDetails: (v: boolean) => void,
-  projection: any[], lifeExpectancyGain: number
+  projection: { age: number; bioAge: number; gap: number }[], lifeExpectancyGain: number
 }) {
   const currentAge = userData.chronologicalAge || 40
   const activeInterventions = interventions.filter(i => i.adherence > 0)
@@ -805,7 +810,7 @@ function EvidenceTimeline({ interventions }: { interventions: Intervention[] }) 
         <Card key={intervention.id} className="glass-layer overflow-hidden">
           <CardHeader className="pb-5">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4">
                 <div className={cn("p-3 rounded-xl", CATEGORY_CONFIG[intervention.category].gradient + "/15", `border border-${CATEGORY_CONFIG[intervention.category].color}-500/20`)}>
                   <span style={{ color: `var(--${CATEGORY_CONFIG[intervention.category].color})` }} className="h-6 w-6 flex items-center justify-center">
                     <CategoryIcon className="h-6 w-6" />

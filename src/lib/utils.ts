@@ -11,6 +11,45 @@ export function formatNumber(num: number): string {
   return num.toFixed(num % 1 === 0 ? 0 : 1)
 }
 
+/**
+ * Resolve a category color to a hex value for chart rendering.
+ * Falls back to emerald if the category is unknown.
+ */
+export function getCategoryColor(category: Intervention["category"]): string {
+  const colorMap: Record<string, string> = {
+    supplement: "#00d97e",
+    exercise: "#06b6d4",
+    diet: "#fbbf24",
+    sleep: "#06b6d4",
+    drug: "#f43f5e",
+    behavioral: "#fbbf24",
+  }
+  return colorMap[category] ?? "#00d97e"
+}
+
+/**
+ * Sanitize a string for safe rendering to prevent XSS.
+ * Escapes HTML entities and strips dangerous attributes.
+ */
+export function sanitizeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;")
+}
+
+/**
+ * Validate that a value is a finite number within an optional range.
+ */
+export function isValidNumber(value: unknown, min?: number, max?: number): boolean {
+  if (typeof value !== "number" || !Number.isFinite(value)) return false
+  if (min !== undefined && value < min) return false
+  if (max !== undefined && value > max) return false
+  return true
+}
+
 export interface Intervention {
   id: string
   name: string
@@ -343,6 +382,14 @@ export const agingClocks = [
   { id: "telomere", name: "Telomere Length", description: "Leukocyte telomere length (qPCR)", unit: "kb", color: "cyan" },
 ]
 
+/**
+ * Estimates biological age from chronological age and intervention adherence.
+ * Applies a floor at 65% of chronological age to prevent unrealistic results.
+ *
+ * @param chronologicalAge - User's chronological age in years
+ * @param interventions - List of interventions with effect sizes and adherence values
+ * @returns Estimated biological age in years
+ */
 export function calculateBiologicalAge(chronologicalAge: number, interventions: Intervention[]): number {
   let reduction = 0
   interventions.forEach(i => {
